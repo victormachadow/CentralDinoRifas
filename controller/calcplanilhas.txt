@@ -1,0 +1,411 @@
+import glob
+from openpyxl import load_workbook
+import pandas as pd
+import os
+import threading
+
+class CPlanilhas:
+    
+ def input_listener():
+    while True:
+        user_input = input("E para voltar o inicio")
+        user_input = user_input.lower()
+        if user_input == "e":
+            inputInit()
+
+
+
+
+
+def verificaTxt(arquivo): #Tratamento de erro
+ print(arquivo)
+ with open( arquivo, 'r' ,  encoding='utf-8' ) as arquivo:
+    linhas = arquivo.readlines()
+
+ arquivo_valido = True
+
+ for i, linha in enumerate(linhas):
+    if ',' not in linha:
+        print(f" \n Arquivo inválido: linha {i+1} não contém uma vírgula. \n")
+        arquivo_valido = False
+        
+        
+ return arquivo_valido       
+        
+        
+
+def selecionaTxt():
+ pass
+    
+
+def textToExcel_CsvVirgulas(arquivo_escolhido): #Cria um excel no formato csv separado por virgulas
+ # Ler o arquivo .txt
+ if(verificaTxt(arquivo_escolhido)==True):
+  dados = pd.read_csv(arquivo_escolhido, delimiter=',')
+
+  #Salvar em um arquivo Excel
+  #Antes de salvar no excel , inserir uma primeira linha: Nome , Telefone . Assim já deixa formatado certinho
+  #dados.to_excel('arquivo-formatado.xlsx', index=False)
+  dados.to_csv('arquivo-formatado.csv', sep=',', index=False)
+
+  print("Os dados foram separados em colunas e salvos em um arquivo Excel Csv separado por virgulas.")
+ else:
+  print("Arquivo formato inválido")
+  
+  
+ 
+def textToExcel_Xls_Csv(arquivo_escolhido): #Cria um excel no formato csv separado por virgulas
+ # Ler o arquivo .txt
+ if(verificaTxt(arquivo_escolhido)):
+  nomes_colunas = ['Nome', 'Telefone']
+  dados = pd.read_csv(arquivo_escolhido, delimiter=',' , header=None )
+  
+  dados.columns = nomes_colunas
+  #dados = pd.concat([dados, pd.DataFrame(columns=nomes_colunas)], axis=1)
+  nameXls=arquivo_escolhido.replace(".txt", "")+"-fomatadoXls.xlsx"
+  nameCsv=arquivo_escolhido.replace(".txt", "")+"-fomatadoCsv.csv"
+  #print(nameXls)
+  #print(nameCsv)
+  #Salvar em um arquivo Excel
+  #Antes de salvar no excel , inserir uma primeira linha: Nome , Telefone . Assim já deixa formatado certinho
+  dados.to_excel(nameXls, index=False)
+  
+  #print(dados.columns)
+  df = pd.read_excel(nameXls)
+ # Gravação como CSV separado por vírgulas
+  df.to_csv(nameCsv, index=False, sep=';' )
+  print(df.columns)
+  os.startfile(nameCsv)
+  showPlanilha(nameXls)
+  
+  
+ 
+def textToExcel_Xls_Csv_Lote(arquivo_escolhido): #Cria um excel no formato csv separado por virgulas
+ # Fazer com todos os arquivos textos do diretorio
+ if(verificaTxt(arquivo_escolhido)):
+  nomes_colunas = ['Nome', 'Telefone']
+  dados = pd.read_csv(arquivo_escolhido, delimiter=',' , header=None )
+  
+  dados.columns = nomes_colunas
+  #dados = pd.concat([dados, pd.DataFrame(columns=nomes_colunas)], axis=1)
+  nameXls=arquivo_escolhido.replace(".txt", "")+"-fomatadoXls.xlsx"
+  nameCsv=arquivo_escolhido.replace(".txt", "")+"-fomatadoCsv.csv"
+  print(nameXls)
+  print(nameCsv)
+  #Salvar em um arquivo Excel
+  #Antes de salvar no excel , inserir uma primeira linha: Nome , Telefone . Assim já deixa formatado certinho
+  dados.to_excel(nameXls, index=False)
+  
+  print(dados.columns)
+  df = pd.read_excel(nameXls)
+  #df[nomes_colunas[0]] = ''
+  #df[nomes_colunas[1]] = ''
+  #df.insert(0, column='Telefone', value='')
+  #df.insert(0, column='Nome', value='')
+  #df = pd.concat([df, pd.DataFrame(columns=nomes_colunas)], axis=1)
+
+  # Gravação como CSV separado por vírgulas
+  df.to_csv(nameCsv, index=False, sep=';' )
+  print(df.columns)
+  showPlanilha(nameXls)
+  
+  
+ 
+
+  print("Os dados foram separados em colunas e salvos em um arquivo Xls Excel.") #Trocar print por um alert
+ else:
+  print("Arquivo formato inválido") #Trocar print por um alert
+
+
+
+def selecionaPlanilha():
+  pass
+ 
+ 
+def muda_nomeColunas(planilha_selecionada):
+ pass
+ 
+def verPlanilha(planilha_selecionada):
+ 
+ planilha = pd.read_excel(planilha_selecionada)
+ colunas = []
+ dados = pd.read_excel(planilha_selecionada)
+ #pega o numero de linhas aqui
+ #Obter a entrada do usuário para o número de linhas
+ 
+ #numero_linhas = int(input("\n Digite o número de linhas a serem exibidas: "))
+ numero_linhas = 5
+ # Exibir as primeiras linhas da planilha
+ print(f" \n numero linhas: {planilha.shape[0]}")
+ print(f" \n{planilha.head(numero_linhas)}")
+ 
+ print("\n Colunas : ") 
+ # Imprimir o nome das colunas
+ # Mostrar o nome das colunas enumeradas
+
+ for i, coluna in enumerate(dados.columns):
+    print(f"{i}. {coluna}")
+    colunas.insert(i,coluna)
+    
+ showPlanilha(planilha_selecionada)    
+    
+
+def showPlanilha(planilha_selecionada):
+ planilha = pd.read_excel(planilha_selecionada)
+ colunas = []
+ dados = pd.read_excel(planilha_selecionada)
+ #pega o numero de linhas aqui
+ # Obter a entrada do usuário para o número de linhas
+ '''
+ numero_linhas = int(input("\n Digite o número de linhas a serem exibidas: "))
+ # Exibir as primeiras linhas da planilha
+ print(planilha.head(numero_linhas))
+ 
+ print("\n Colunas : ") 
+ # Imprimir o nome das colunas
+ # Mostrar o nome das colunas enumeradas
+
+ for i, coluna in enumerate(dados.columns):
+    print(f"{i}. {coluna}")
+    colunas.insert(i,coluna)
+ 
+ #Este trecho mostra as colunas e x linhas pedidas
+ '''
+ print("Digite V para ver os dados da coluna")
+ print("Digite F para filtrar colunas em uma nova planilha Automaticamente")
+ print("Digite M para filtrar colunas em uma nova planilha Manualmente")
+ print("Digite D para dividir/fatiar a planilha")
+ print("Digite A para abrir a planilha")
+ print("Digite R para renomear colunas")
+ print("Digite E para voltar")
+ while True:
+  action = input("\n Digite as opções para a planilha: ")   
+   
+  action = action.lower()
+  if action == 'v':
+   #n = int(input("Digite o numero da coluna"))
+   verPlanilha(planilha_selecionada)
+   #print(colunas[n])
+   coluna_desejada = dados[colunas[n]]
+   print(coluna_desejada[:2])
+  elif action == 'f':
+   filtraColunas_Auto(planilha_selecionada)
+  elif action == 'm':
+   filtraColunas_Manual(planilha_selecionada)
+  elif action == 'd':
+   fatiaPlanilha(planilha_selecionada)
+  elif action == 'a':
+   os.startfile(planilha_selecionada)
+  elif action == 'e':
+   selecionaPlanilha()
+    
+  else:
+    # Opção inválida
+    print("\n Opção inválida! \n")
+
+    
+    
+    
+def filtraColunas(planilha): #Retirar as colunas desejadas    
+    
+ planilha_selecionada = pd.read_excel(planilha)   
+ # Obter a lista enumerada das colunas
+ colunas_enum = list(enumerate(planilha_selecionada.columns))
+
+ # Solicitar ao usuário as colunas desejadas
+ #colunas_desejadas = input("Digite o número das colunas desejadas (separadas por vírgula): ")
+ #colunas_desejadas = [int(x.strip()) for x in colunas_desejadas.split(",")]
+ 
+  # Strings a serem verificadas
+ strings = ['nome', 'telefone']
+
+ # Converter todas as strings para letras minúsculas
+ strings_lower = [s.lower() for s in strings]
+
+ # Verificar se as strings estão presentes nas colunas da planilha
+ presentes = any(planilha_selecionada.apply(lambda row: any(s in str(row).lower() for s in strings_lower), axis=1))
+
+ if presentes:
+    print("As strings estão presentes na planilha.")
+ else:
+    print("As strings não estão presentes na planilha.")
+
+
+ # Selecionar as colunas desejadas
+ #colunas_selecionadas = [colunas_enum[i][1] for i in colunas_desejadas]
+
+ # Gerar a nova planilha com as colunas selecionadas
+ '''
+ planilha_nova = planilha_selecionada[colunas_selecionadas]
+ planilha_nova_name = "filtradaXls"+planilha
+ print(planilha_nova_name)
+ # Salvar a nova planilha em um arquivo
+ planilha_nova.to_excel( planilha_nova_name , index=False )
+ #Gerar em csv tambem
+ 
+ 
+ 
+ #df = pd.read_excel(planilha_nova_name)
+ #Gravação como CSV separado por vírgulas
+ planilha_nova_namecsv = planilha_nova_name.replace(".xlsx", "").replace("Xls","")+"Csv"+".csv"
+ planilha_nova.to_csv( planilha_nova_namecsv , index=False, sep=';' )
+ print("Planilha nova gerada com sucesso!")
+ #os.startfile(planilha_nova_namecsv)
+ muda_nomeColunas(planilha)
+ '''
+ 
+ 
+#----------------------------------------------------------------------------x 
+
+    
+def filtraColunas_Auto(planilha): #Retirar as colunas desejadas e salvar nova planilha automaticamente    
+ 
+ # Ler o arquivo de planilha Excel
+ dataframe = pd.read_excel(planilha)
+ 
+ #Aqui irá percorrer recursivamente todas as opções de nome possíveis de coluna para os telefones ( FUNCIONANDO )
+ 
+
+ opcoes = [ 'fone fixo' , 'telefone' , 'fone' , 'hot' , 'hot1' , 'hot2' , 'hot3']
+ i = 0
+ while i < len(opcoes):
+ 
+  colunaNome = ['Nome']
+  colunaNome.append(opcoes[i])
+  print(f"Iterando opcao {opcoes[i]}")
+  #Verificar se as colunas desejadas estão presentes na planilha
+  #colunas_desejadas = ['Nome','Fone Fixo']
+  colunas_desejadas = colunaNome
+  colunas_desejadas = [s.lower().replace(" ","").strip() for s in colunas_desejadas]
+  #colunas_desejadas = [print(s) for s in colunas_desejadas]
+  print(colunas_desejadas)
+  #colunas_presentes = [col for col in colunas_desejadas if col.strip() in dataframe.columns.str.strip()]
+  dataframe.columns = [ s.lower().replace(" ","").strip() for s in dataframe.columns ]
+  print(dataframe.columns)
+  colunas_presentes = [col for col in dataframe.columns if col in colunas_desejadas]
+  #colunas_presentes = [ col for col in colunas_desejadas if col in dataframe.columns]
+
+  print(len(colunas_desejadas))
+  print(len(colunas_presentes))
+
+  if len(colunas_presentes) == len(colunas_desejadas):
+    # Selecionar apenas as colunas desejadas
+    dataframe_selecionado = dataframe[colunas_presentes]
+
+    # Renomear as colunas
+    #nomes_colunas = ['Nome', 'Telefone']
+    nomes_colunas = ['Nome','Telefone']
+    dataframe_selecionado.columns = nomes_colunas
+
+    # Salvar os dados selecionados em uma nova planilha
+    planilha_nova_name ="planilha_formatada"+opcoes[i]+".xlsx"
+    dataframe_selecionado.to_excel(planilha_nova_name, index=False)
+    #Gerar em Csv abaixo
+
+    print("Nova planilha gerada com as colunas selecionadas e renomeadas.")
+  else:
+    print("Algumas colunas desejadas não estão presentes na planilha.")
+   
+  i = i+1 
+  
+ #Fatiar em sequencia e opcional retirar as colunas onde Telefone for nulo
+ #Antes de fatiar , renomear os nomes em sequencia para nomeLista+n , onde primeiro nome nomeLista1 , segundo nomeLista2 por aí vai
+ #muda_nomeColunas(planilha)
+ #fatiaPlanilha(planilha) 
+ 
+
+#----------------------------------------------------------------------------x 
+
+    
+def filtraColunas_Manual(planilha): #Retirar as colunas desejadas e salvar nova planilha manualmente   
+ #Input para escolher a coluna na qual filtrar
+ # Ler o arquivo de planilha Excel
+ dataframe = pd.read_excel(planilha)
+ 
+ nome_colunas = input("Digite o nome de cada coluna separado por vírgulas: ")
+ colunas = nome_colunas.split(',')
+ print(colunas)
+
+ #Verificar se as colunas desejadas estão presentes na planilha
+ colunas_desejadas = colunas
+ colunas_desejadas = [s.lower().replace(" ","").strip() for s in colunas_desejadas]
+ #colunas_desejadas = [print(s) for s in colunas_desejadas]
+ print(colunas_desejadas)
+ #colunas_presentes = [col for col in colunas_desejadas if col.strip() in dataframe.columns.str.strip()]
+ dataframe.columns = [ s.lower().replace(" ","").strip() for s in dataframe.columns ]
+ print(dataframe.columns)
+ colunas_presentes = [col for col in dataframe.columns if col in colunas_desejadas]
+ #colunas_presentes = [ col for col in colunas_desejadas if col in dataframe.columns]
+
+ print(len(colunas_desejadas))
+ print(len(colunas_presentes))
+
+ if len(colunas_presentes) == len(colunas_desejadas):
+    # Selecionar apenas as colunas desejadas
+    dataframe_selecionado = dataframe[colunas_presentes]
+
+    # Renomear as colunas
+    #nomes_colunas = ['Nome', 'Telefone']
+    nomes_colunas = ['Nome','Telefone']
+    dataframe_selecionado.columns = nomes_colunas
+
+    # Salvar os dados selecionados em uma nova planilha
+    # Salvar os dados selecionados em uma nova planilha
+    planilha_nova_name ="planilha_formatada"+colunas[1]+".xlsx"
+    dataframe_selecionado.to_excel(planilha_nova_name, index=False)
+    #Gerar em Csv abaixo
+    
+
+    print("Nova planilha gerada com as colunas selecionadas e renomeadas.")
+ else:
+    print("Algumas colunas desejadas não estão presentes na planilha.")
+ 
+ 
+#----------------------------------------------------------------------------x 
+
+def fatiaPlanilha(planilha_selecionada):
+
+ planilha = pd.read_excel(planilha_selecionada)
+
+ # Especificando o tamanho do intervalo
+ tamanho_intervalo = 200
+
+ # Dividindo a planilha em intervalos
+ intervalos = [grupo for _, grupo in planilha.groupby(planilha.index // tamanho_intervalo)]
+
+ # Salvando cada intervalo em arquivos separados
+ for i, intervalo in enumerate(intervalos):
+    nome_arquivo = f'{planilha_selecionada}_fatiada{i+1}.xlsx'
+    intervalo.to_excel(nome_arquivo, index=False)
+
+ print(f'A planilha foi dividida em intervalos de {tamanho_intervalo} linhas.')
+ selecionaPlanilha()
+ '''
+ resposta = input("Deseja voltar ao menu? Digite S ou N")
+ 
+ if resposta == 's':
+    selecionaPlanilha()
+ elif resposta == 'n':
+    # Chamar a Função B
+    selecionaPlanilha()
+ else:
+    # Opção inválida
+    print("Opção inválida!")
+ '''  
+
+#selecionaPlanilha()
+inputInit()
+
+
+def fatia_Planilhas_Lote(): 
+ pass
+
+def filtra_Planilhas_Lote(): #Vai procurar pelas strings: nome,telefone ou hot e pedir para escolher quais colunas filtrar e salvar no padrão Nome,Telefone
+ pass
+
+
+
+#def formatar_padrao_nome_telefone() #Escolher as colunas para  filtrar e criar nova planilha formatada no padrao nome e telefone
+
+def formatar_padrao_texto(): # Vai só pegar padrão nome,telefone e apagar todos outros registros separados por virgula
+ pass

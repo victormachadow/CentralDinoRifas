@@ -1,0 +1,37 @@
+ Dashboard
+
+ Texbox links - Rifas
+  rifas link
+  pedidos link
+  whatsapp link
+ 
+ Textbox links - ferramentas
+  canva
+  etc
+
+ Textbox texto - Estratégias
+
+-------------x
+
+ Rifas
+
+ Rifas - textbox
+ rifa nome
+ link
+ ...
+ botao atualizar mensagens
+ editar- link
+ mensagens - textbox
+
+-------------x
+
+ Pedidos
+ 
+ link sorteio - entry
+
+ não há rifas finalizadas - label
+
+ pegar numero sorteio - entry
+
+ 
+ 

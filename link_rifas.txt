@@ -1,0 +1,2 @@
+https://dinorifas.com.br/wp-admin/edit.php
+https://dinorifas.com.br/wp-admin/edit.php?post_type=post_product_order
