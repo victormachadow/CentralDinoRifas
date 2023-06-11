@@ -1,0 +1,123 @@
+
+ Global setup
+ -------------
+
+git config --global user.name "username"
+git config --global user.email "emailgit"
+
+Push an existing folder
+-----------------------
+
+cd existing_folder or git bash on folder
+git init
+git remote add origin git@gitlab.com:vitortetudo/project.git
+git add .
+git commit -m "Initial commit"
+git push -u origin master
+
+Push an existing repository
+--------------------------
+cd existing_repo
+git remote rename origin old-origin
+git remote add origin git@gitlab.com:vitortetudo/project.git
+git push -u origin --all
+git push -u origin --tags
+
+ git remote & origin
+ --------------------------
+  git origin is original remote repository
+  git remote -v // view remote repositories
+  
+  
+  git pull & fetch
+ -------------------------- 
+  
+  git fetch = baixa e atualiza as referências
+  
+  git fetch repositorio branch
+  git fetch -all
+  
+  ex:
+  git fetch origin master
+ 
+  git pull = git fetch + git merge
+   baixa o conteúdo do repositorio remoto p local
+    atualizando o mesmo
+    
+  *git pull repositório branch
+ 
+  ex:
+  git pull origin master
+  
+  
+  
+   git push
+ ----------------
+  
+  git push = envia modificações do repositorio
+  local para o repositorio remoto/central
+  
+  git push repositorio branch
+  
+  ex:
+  
+  git push origin master
+ 
+  
+  
+ Key Acess
+ ---------
+
+  Create an ssh key for each machine , to transfer data 
+
+1 - Go to "Git Bash" just like cmd. Right click and "Run as Administrator".
+2 - Type ssh-keygen
+3 - Press enter.
+4 - It will ask you to save the key to the specific directory.
+5 - Press enter. It will prompt you to type password or enter without password.
+6 -The public key will be created to the specific directory.
+7 - Now go to the directory and open .ssh folder.
+8 - You'll see a file id_rsa.pub. Open it on notepad. Copy all text from it.
+9 - Go to https://gitlab.com/profile/keys .
+10 - Paste here in the "key" textfield.
+11 - Now click on the "Title" below. It will automatically get filled.
+12 - Then click "Add key".
+
+ Create and Managing branches
+ -----------------------------
+   Create branch 
+
+    git checkout -b "branchname"
+    or
+    git -b "branchname"
+
+    1.View branches
+
+     git branch -a
+
+    2.Switching branches
+
+      git checkout "branchname"
+
+    3.Pushing new branch to remote server
+
+      git push origin "name_of_your_new_branch"
+        
+        *When push new branch to remote , will be created automatically a new branch in the remote too
+		
+		
+
+      Git clone 
+	  ----------------------------------
+	  
+	   1. Cloning projects on empty repositories
+	   
+	   cd existing_folder
+	   git clone git@gitlab.com:vitortetudo/project.git
+	   
+	  
+    ----------------------------------
+
+     Manage remotes
+      
+       View remotes :  git remote -v

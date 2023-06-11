@@ -15,6 +15,8 @@ class CPlanilhas:
 
 
 
+if False:
+    # Seu trecho de código problemático aqui
 
 
 def verificaTxt(arquivo): #Tratamento de erro
