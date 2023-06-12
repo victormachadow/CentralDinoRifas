@@ -15,6 +15,8 @@ git add .
 git commit -m "Initial commit"
 git push -u origin master
 
+git push -u origin main  // Today main is the default branch  
+
 Push an existing repository
 --------------------------
 cd existing_repo
@@ -64,7 +66,6 @@ git push -u origin --tags
   git push origin master
  
   
-  
  Key Acess
  ---------
 
@@ -85,7 +86,7 @@ git push -u origin --tags
 
  Create and Managing branches
  -----------------------------
-   Create branch 
+   Create branch // As branches são LOCAIS criadas LOCALMENTE
 
     git checkout -b "branchname"
     or
